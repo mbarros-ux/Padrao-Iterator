@@ -78,14 +78,17 @@ classDiagram
 É fundamental diferenciar os benefícios teóricos dos riscos práticos de implementação.
 
 #### Vantagens (Fatos)
+
 * **Princípio Aberto/Fechado (OCP):** O código cliente não precisa ser alterado se a estrutura interna da coleção mudar (ex: de `ArrayList` para `LinkedList` ou uma estrutura de árvore customizada).
 * **Princípio da Responsabilidade Única (SRP):** A lógica de travessia (*traversal*) é removida da classe de coleção e encapsulada no objeto iterador, limpando a interface da coleção.
 * **Múltiplas Travessias:** Permite ter mais de uma travessia pendente na mesma coleção simultaneamente (cada chamada a `iterator()` cria um novo estado de travessia).
 
 #### Pontos Cegos e Contrapontos (Onde o padrão exige cuidado)
+
 1. **Exceção de Modificação Concorrente (`ConcurrentModificationException`):**
    * **Fato:** Se a coleção for modificada (adicionar/remover elementos) enquanto um iterador está percorrendo-a, o iterador *fail-fast* do Java lançará uma exceção.
    * **Contraponto:** Para evitar isso em ambientes multithread, use coleções *thread-safe* (ex: `CopyOnWriteArrayList`) ou itere sobre uma cópia defensiva da coleção (ex: `List.copyOf(colecao)`), como demonstrado em padrões como o Observer.
+     
 2. **Overengineering em Coleções Simples:**
    * **Fato:** Criar classes iteradoras customizadas do zero (com `hasNext` e `next` manuais) para uma lista simples adiciona complexidade desnecessária.
    * **Contraponto:** A abordagem mais pragmática e alinhada ao Java moderno (e ao exemplo do professor) é fazer a coleção implementar `Iterable` e delegar diretamente para o iterador nativo da estrutura de dados subjacente (`return this.listaInterna.iterator()`).
